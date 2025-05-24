@@ -1,0 +1,236 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<title>Personal Details Manager</title>
+<style>
+  body {
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+    background: #e6f0ff;
+    margin: 0;
+    padding: 0;
+    display: flex;
+    height: 100vh;
+    justify-content: center;
+    align-items: center;
+  }
+
+  #app {
+    background: white;
+    border-radius: 16px;
+    box-shadow: 0 18px 36px rgba(0, 0, 0, 0.15);
+    padding: 40px 35px;
+    width: 400px;
+    max-width: 90vw;
+    transition: all 0.3s ease;
+  }
+
+  h1, h2 {
+    color: #0d3b66;
+    margin-bottom: 25px;
+    text-align: center;
+  }
+
+  .btn-group {
+    display: flex;
+    justify-content: space-around;
+    margin-top: 30px;
+  }
+
+  button {
+    background-color: #0077cc;
+    border: none;
+    color: white;
+    padding: 15px 22px;
+    font-size: 16px;
+    border-radius: 10px;
+    cursor: pointer;
+    width: 160px;
+    transition: background-color 0.25s ease;
+    box-shadow: 0 4px 12px rgba(0, 119, 204, 0.4);
+  }
+
+  button:hover {
+    background-color: #005fa3;
+  }
+
+  form {
+    display: flex;
+    flex-direction: column;
+  }
+
+  label {
+    margin-bottom: 6px;
+    font-weight: 600;
+    color: #333;
+  }
+
+  input[type="text"],
+  input[type="email"],
+  input[type="tel"] {
+    padding: 10px 14px;
+    margin-bottom: 20px;
+    font-size: 15px;
+    border-radius: 8px;
+    border: 1.5px solid #aaa;
+    outline-color: #0077cc;
+    transition: border-color 0.3s ease;
+  }
+
+  input[type="text"]:focus,
+  input[type="email"]:focus,
+  input[type="tel"]:focus {
+    border-color: #0077cc;
+  }
+
+  #detailsDisplay {
+    background-color: #f9faff;
+    border-radius: 12px;
+    padding: 25px 20px;
+    box-shadow: inset 0 0 15px rgba(0, 119, 204, 0.15);
+  }
+
+  .detail-row {
+    margin-bottom: 14px;
+    font-size: 16px;
+  }
+
+  .detail-label {
+    font-weight: 700;
+    color: #0d3b66;
+  }
+
+  .thank-you {
+    margin-top: 25px;
+    font-weight: 600;
+    color: #0077cc;
+    text-align: center;
+  }
+
+  .back-btn {
+    background-color: #555;
+    margin-top: 25px;
+  }
+
+  .back-btn:hover {
+    background-color: #333;
+  }
+</style>
+</head>
+<body>
+
+<div id="app">
+  <!-- Dynamic content goes here -->
+</div>
+
+<script>
+  const app = document.getElementById('app');
+
+  // Initial welcome page with options
+  function renderWelcomePage() {
+    app.innerHTML = `
+      <h1>Welcome to Your Personal Details Manager</h1>
+      <div class="btn-group">
+        <button id="btnProvideDetails">Provide Your Personal Details</button>
+        <button id="btnViewDetails">View Your Saved Details</button>
+      </div>
+    `;
+
+    document.getElementById('btnProvideDetails').onclick = renderDetailsForm;
+    document.getElementById('btnViewDetails').onclick = renderViewDetails;
+  }
+
+  // Form page to input details
+  function renderDetailsForm() {
+    app.innerHTML = `
+      <h2>Enter Your Personal Details</h2>
+      <form id="detailsForm">
+        <label for="name">Full Name</label>
+        <input type="text" id="name" placeholder="Your full name" required />
+
+        <label for="email">Email Address</label>
+        <input type="email" id="email" placeholder="example@mail.com" required />
+
+        <label for="address">Address</label>
+        <input type="text" id="address" placeholder="Your address" required />
+
+        <label for="mobile">Mobile Number</label>
+        <input type="tel" id="mobile" placeholder="+1 234 567 8901" pattern="\\+?\\d{10,15}" required />
+
+        <label for="profession">Profession</label>
+        <input type="text" id="profession" placeholder="Your profession" required />
+
+        <button type="submit">Submit Details</button>
+      </form>
+      <button class="back-btn" id="backToWelcome">Back to Home</button>
+    `;
+
+    document.getElementById('detailsForm').onsubmit = e => {
+      e.preventDefault();
+      saveDetails();
+    };
+
+    document.getElementById('backToWelcome').onclick = renderWelcomePage;
+  }
+
+  // Save details to localStorage
+  function saveDetails() {
+    const name = document.getElementById('name').value.trim();
+    const email = document.getElementById('email').value.trim();
+    const address = document.getElementById('address').value.trim();
+    const mobile = document.getElementById('mobile').value.trim();
+    const profession = document.getElementById('profession').value.trim();
+
+    if (!name || !email || !address || !mobile || !profession) {
+      alert('Please fill in all fields.');
+      return;
+    }
+
+    // Save data as JSON string
+    const userDetails = { name, email, address, mobile, profession };
+    localStorage.setItem('userDetails', JSON.stringify(userDetails));
+
+    alert('Details saved successfully!');
+    renderWelcomePage();
+  }
+
+  // Display stored details page
+  function renderViewDetails() {
+    const dataJSON = localStorage.getItem('userDetails');
+    if (!dataJSON) {
+      app.innerHTML = `
+        <h2>No Details Found</h2>
+        <p>You have not provided any personal details yet.</p>
+        <button class="back-btn" id="backToWelcome">Back to Home</button>
+      `;
+      document.getElementById('backToWelcome').onclick = renderWelcomePage;
+      return;
+    }
+
+    const data = JSON.parse(dataJSON);
+
+    app.innerHTML = `
+      <h2>Your Personal Details</h2>
+      <div id="detailsDisplay">
+        <div class="detail-row"><span class="detail-label">Full Name:</span> ${data.name}</div>
+        <div class="detail-row"><span class="detail-label">Email Address:</span> ${data.email}</div>
+        <div class="detail-row"><span class="detail-label">Address:</span> ${data.address}</div>
+        <div class="detail-row"><span class="detail-label">Mobile Number:</span> ${data.mobile}</div>
+        <div class="detail-row"><span class="detail-label">Profession:</span> ${data.profession}</div>
+      </div>
+      <div class="thank-you">Thank you for providing your details!</div>
+      <button class="back-btn" id="backToWelcome">Back to Home</button>
+    `;
+
+    document.getElementById('backToWelcome').onclick = renderWelcomePage;
+  }
+
+  // Initialize app on load
+  window.onload = () => {
+    renderWelcomePage();
+  };
+</script>
+
+</body>
+</html>
