@@ -1,0 +1,90 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<title>Your Details</title>
+<style>
+  body {
+    font-family: 'Segoe UI', sans-serif;
+    background: #f0f2f5;
+    padding: 40px 20px;
+    color: #333;
+    display: flex;
+    justify-content: center;
+  }
+  .container {
+    background: #fff;
+    padding: 35px 30px;
+    border-radius: 12px;
+    box-shadow: 0 4px 18px rgba(0,0,0,0.1);
+    width: 380px;
+  }
+  h2 {
+    margin-bottom: 25px;
+    font-weight: 700;
+    text-align: center;
+  }
+  .field {
+    margin-bottom: 15px;
+  }
+  .label {
+    font-weight: 600;
+    color: #555;
+  }
+  .value {
+    margin-top: 4px;
+    font-size: 17px;
+  }
+  .btn-back {
+    display: block;
+    margin: 30px auto 0;
+    padding: 12px 30px;
+    font-size: 16px;
+    background-color: #007bff;
+    color: white;
+    border: none;
+    border-radius: 8px;
+    cursor: pointer;
+    text-align: center;
+    text-decoration: none;
+    width: fit-content;
+  }
+  .btn-back:hover {
+    background-color: #0056b3;
+  }
+</style>
+</head>
+<body>
+  <div class="container">
+    <h2>Your Registered Details</h2>
+    <div id="detailsContainer"></div>
+    <button class="btn-back" onclick="window.location.href='index.html'">Back to Home</button>
+  </div>
+
+  <script>
+    const email = localStorage.getItem("lookupEmail");
+
+    if (!email) {
+      alert("No email found. Please enter your email to see details.");
+      window.location.href = "check-email.html";
+    }
+
+    // Get user data from localStorage
+    const userDataJson = localStorage.getItem("user_" + email);
+    const container = document.getElementById("detailsContainer");
+
+    if (userDataJson) {
+      const userData = JSON.parse(userDataJson);
+      for (const [key, val] of Object.entries(userData)) {
+        const fieldDiv = document.createElement("div");
+        fieldDiv.classList.add("field");
+        fieldDiv.innerHTML = `<div class="label">${key.charAt(0).toUpperCase() + key.slice(1)}:</div><div class="value">${val}</div>`;
+        container.appendChild(fieldDiv);
+      }
+    } else {
+      container.innerHTML = "<p>No user details found.</p>";
+    }
+  </script>
+</body>
+</html>

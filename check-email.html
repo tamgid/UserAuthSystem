@@ -1,0 +1,96 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<title>Check Your Details</title>
+<style>
+  body {
+    font-family: 'Segoe UI', sans-serif;
+    background: #f0f2f5;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    height: 100vh;
+    margin: 0;
+    color: #333;
+  }
+  .container {
+    background: #fff;
+    padding: 40px 30px;
+    border-radius: 12px;
+    box-shadow: 0 4px 18px rgba(0,0,0,0.1);
+    text-align: center;
+    width: 350px;
+  }
+  h2 {
+    margin-bottom: 25px;
+    font-weight: 700;
+  }
+  input[type="email"] {
+    width: 100%;
+    padding: 12px 14px;
+    font-size: 16px;
+    border-radius: 8px;
+    border: 1px solid #ccc;
+    margin-bottom: 20px;
+  }
+  button {
+    width: 100%;
+    padding: 14px;
+    font-size: 17px;
+    border: none;
+    border-radius: 8px;
+    background-color: #007bff;
+    color: white;
+    cursor: pointer;
+    font-weight: 600;
+    transition: background-color 0.3s ease;
+  }
+  button:hover {
+    background-color: #0056b3;
+  }
+  .message {
+    margin-top: 18px;
+    color: red;
+  }
+</style>
+</head>
+<body>
+  <div class="container">
+    <h2>Enter Your Registered Email</h2>
+    <form id="emailForm">
+      <input type="email" id="emailInput" placeholder="Enter your email" required />
+      <button type="submit">Submit</button>
+    </form>
+    <div class="message" id="message"></div>
+  </div>
+
+  <script>
+    const form = document.getElementById("emailForm");
+    const message = document.getElementById("message");
+
+    form.addEventListener("submit", (e) => {
+      e.preventDefault();
+      message.textContent = "";
+      const email = document.getElementById("emailInput").value.trim().toLowerCase();
+
+      if (!email) {
+        message.textContent = "Please enter a valid email.";
+        return;
+      }
+
+      // Look for user data in localStorage by email key
+      const userDataJson = localStorage.getItem("user_" + email);
+
+      if (userDataJson) {
+        // Save email in localStorage for the details page to fetch
+        localStorage.setItem("lookupEmail", email);
+        window.location.href = "user-details.html";
+      } else {
+        message.textContent = "Email not found. Please register first.";
+      }
+    });
+  </script>
+</body>
+</html>

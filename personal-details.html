@@ -1,0 +1,121 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<title>Personal Details</title>
+<style>
+  body {
+    font-family: 'Segoe UI', sans-serif;
+    background: #f0f2f5;
+    padding: 40px 20px;
+    color: #333;
+    display: flex;
+    justify-content: center;
+  }
+  .container {
+    background: #fff;
+    padding: 40px 35px;
+    border-radius: 12px;
+    box-shadow: 0 4px 18px rgba(0,0,0,0.1);
+    width: 380px;
+  }
+  h2 {
+    margin-bottom: 25px;
+    font-weight: 700;
+    text-align: center;
+  }
+  form {
+    display: flex;
+    flex-direction: column;
+  }
+  label {
+    margin-bottom: 6px;
+    font-weight: 600;
+    color: #555;
+  }
+  input {
+    margin-bottom: 18px;
+    padding: 12px 14px;
+    font-size: 16px;
+    border-radius: 8px;
+    border: 1px solid #ccc;
+  }
+  button {
+    padding: 14px;
+    font-size: 17px;
+    background-color: #007bff;
+    color: white;
+    border: none;
+    border-radius: 8px;
+    cursor: pointer;
+    font-weight: 600;
+    transition: background-color 0.3s ease;
+  }
+  button:hover {
+    background-color: #0056b3;
+  }
+</style>
+</head>
+<body>
+  <div class="container">
+    <h2>Provide Your Personal Details</h2>
+    <form id="personalForm">
+      <label for="name">Full Name</label>
+      <input type="text" id="name" required />
+
+      <label for="email">Email (Read-only)</label>
+      <input type="email" id="email" readonly />
+
+      <label for="address">Address</label>
+      <input type="text" id="address" required />
+
+      <label for="mobile">Mobile Number</label>
+      <input type="tel" id="mobile" pattern="[0-9+\-\s]{7,15}" required placeholder="+1 555 123 4567" />
+
+      <label for="profession">Profession</label>
+      <input type="text" id="profession" required />
+
+      <button type="submit">Submit</button>
+    </form>
+  </div>
+
+  <script>
+    const emailInput = document.getElementById("email");
+    const personalForm = document.getElementById("personalForm");
+
+    const regEmail = localStorage.getItem("registeredEmail");
+    const regPassword = localStorage.getItem("registeredPassword");
+
+    if (!regEmail || !regPassword) {
+      alert("No registration info found. Please register first.");
+      window.location.href = "signup.html";
+    }
+
+    emailInput.value = regEmail;
+
+    personalForm.addEventListener("submit", (e) => {
+      e.preventDefault();
+
+      const userDetails = {
+        name: document.getElementById("name").value.trim(),
+        email: regEmail,
+        address: document.getElementById("address").value.trim(),
+        mobile: document.getElementById("mobile").value.trim(),
+        profession: document.getElementById("profession").value.trim(),
+        password: regPassword // store password here too (only for demo)
+      };
+
+      // Save the user details keyed by email
+      localStorage.setItem("user_" + regEmail, JSON.stringify(userDetails));
+
+      // Clear temporary registration info
+      localStorage.removeItem("registeredEmail");
+      localStorage.removeItem("registeredPassword");
+
+      alert("Your details have been saved successfully!");
+      window.location.href = "index.html";
+    });
+  </script>
+</body>
+</html>

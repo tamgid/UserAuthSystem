@@ -1,0 +1,105 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<title>Register</title>
+<style>
+  body {
+    font-family: 'Segoe UI', sans-serif;
+    background: #f0f2f5;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    height: 100vh;
+    margin: 0;
+    color: #333;
+  }
+  .container {
+    background: #fff;
+    padding: 45px 35px;
+    border-radius: 12px;
+    box-shadow: 0 4px 18px rgba(0,0,0,0.1);
+    text-align: center;
+    width: 360px;
+  }
+  h2 {
+    margin-bottom: 25px;
+    font-weight: 700;
+  }
+  input[type="email"],
+  input[type="password"] {
+    width: 100%;
+    padding: 12px 14px;
+    font-size: 16px;
+    border-radius: 8px;
+    border: 1px solid #ccc;
+    margin-bottom: 20px;
+  }
+  button {
+    width: 100%;
+    padding: 14px;
+    font-size: 17px;
+    border: none;
+    border-radius: 8px;
+    background-color: #28a745;
+    color: white;
+    cursor: pointer;
+    font-weight: 600;
+    transition: background-color 0.3s ease;
+  }
+  button:hover {
+    background-color: #1e7e34;
+  }
+  .message {
+    margin-top: 18px;
+    color: red;
+  }
+</style>
+</head>
+<body>
+  <div class="container">
+    <h2>Register with Email and Password</h2>
+    <form id="signupForm">
+      <input type="email" id="signupEmail" placeholder="Enter your email" required />
+      <input type="password" id="signupPassword" placeholder="Enter your password" required minlength="6" />
+      <button type="submit">Next</button>
+    </form>
+    <div class="message" id="message"></div>
+  </div>
+
+  <script>
+    const form = document.getElementById("signupForm");
+    const message = document.getElementById("message");
+
+    form.addEventListener("submit", (e) => {
+      e.preventDefault();
+      message.textContent = "";
+
+      const email = document.getElementById("signupEmail").value.trim().toLowerCase();
+      const password = document.getElementById("signupPassword").value.trim();
+
+      if (!email || !password) {
+        message.textContent = "Please fill in both email and password.";
+        return;
+      }
+      if (password.length < 6) {
+        message.textContent = "Password must be at least 6 characters.";
+        return;
+      }
+
+      // Check if email already registered (stored in localStorage)
+      if (localStorage.getItem("user_" + email)) {
+        message.textContent = "This email is already registered. Please use another.";
+        return;
+      }
+
+      // Save email and password temporarily for next step (no real password handling here)
+      localStorage.setItem("registeredEmail", email);
+      localStorage.setItem("registeredPassword", password);
+
+      window.location.href = "personal-details.html";
+    });
+  </script>
+</body>
+</html>
